@@ -23,6 +23,11 @@ namespace Costam.Map
         private int pondSICN = 100;
         //SICN - Shit I Cant Name - sets probability of creating pond
 
+		private Vector2[] rocks;
+		private int currentRockIndex = 0;
+		private int maxrocks = 32;
+		private int rockSICN = 100;
+
 
 
 
@@ -92,6 +97,37 @@ namespace Costam.Map
 		// Crazy math up here, dont touch (and pray for it working fine) 
 
 
+		private void GenerateArea(Vector2 centralPosition, TileType type)
+		{
+			if (centralPosition == Vector2.Zero)
+			{
+				return;
+			}
+			int size = rand.Next(1, 2);
+			/*1- very small (2 tiles wide)
+			 *2- small (3 tiles wide)
+			 *3- medium (4 tiles wide)
+			 *4- large (5 tiles wide
+			 */
+
+			if (size == 1)
+			{
+				double direction = rand.NextDouble();
+				Vector2 pos = centralPosition;
+				if (direction>=0.5)
+				{
+					pos.X += 1;
+				}
+				else
+				{
+					pos.X -= 1;
+				}
+				CreateTile(type, pos);
+
+			}
+		}
+
+
 		//STILL IN DEVELOPMENT
         private void SetObjects()
         {
@@ -99,6 +135,7 @@ namespace Costam.Map
 			//objects are ponds, rocks, etc
             foreach (var item in TilesArray)
             {
+				//checks every tile
                 if (item.GetTileType() == TileType.Grass)
                 {
 					//checks if this tile is grass, if it's so, lets start lottery
@@ -122,6 +159,26 @@ namespace Costam.Map
 							//make choosen tile water tile
 						}
                     }
+
+
+					//create rocks
+					else if (currentRockIndex < maxrocks)
+					{
+						// if we already have less tan $maxrocks rocks
+						int result = rand.Next(1, rockSICN);
+						if (result == 1
+							&& !IsObjectClose(item.GetPositionInTab(), rocks, 5))
+						{
+							//if random number between 1 and $rockSCIN == 1, create pond
+							rocks[currentRockIndex] = item.GetPositionInTab(); //adds choosen tile to tab of choosen tiles
+							currentRockIndex++; //increment rock index
+
+							Debug.WriteLine("Rock ID: " + currentRockIndex + " location: " + item.GetPositionInTab());
+
+							CreateTile(TileType.Rock, item.GetPositionInTab());
+							//make choosen tile rock tile
+						}
+					}
                 }
 
                 else //if current tle type is NOT grass
@@ -129,6 +186,15 @@ namespace Costam.Map
                     continue;
                 }
             }
+
+			foreach (var item in ponds)
+			{
+				GenerateArea(item, TileType.Water);
+			}
+			foreach (var item in rocks)
+			{
+				GenerateArea(item, TileType.Rock);
+			}
         }
 		//STILL IN DEVELOPMENT
 
@@ -158,7 +224,8 @@ namespace Costam.Map
         public Map()
         {
             TilesArray = new Tile[mapSize, mapSize];
-            ponds = new Vector2[maxponds+1];
+            ponds = new Vector2[maxponds + 1];
+			rocks = new Vector2[maxrocks + 1];
 
             GenerateMap(mapSize);
         }
