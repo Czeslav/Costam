@@ -17,6 +17,7 @@ namespace Costam
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+		Camera camera;
 
         Map.Map map;
 
@@ -44,6 +45,8 @@ namespace Costam
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SpriteBank.LoadTextures(Content);
+			camera = new Camera();
+			camera.Pos = new Vector2(1000, 1000);
 
             map = new Map.Map();
         }
@@ -59,7 +62,7 @@ namespace Costam
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+			camera.Update();
 
             base.Update(gameTime);
         }
@@ -68,8 +71,14 @@ namespace Costam
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-            map.Draw(spriteBatch);
+			spriteBatch.Begin(SpriteSortMode.BackToFront,
+						BlendState.AlphaBlend,
+						null,
+						null,
+						null,
+						null,
+						camera.get_transformation(GraphicsDevice));
+			map.Draw(spriteBatch);
             spriteBatch.End();
 
 

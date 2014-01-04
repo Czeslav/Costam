@@ -37,6 +37,12 @@ namespace Costam.Map
         {
 			//sets tile with given position to given type
 
+			if (position.X > mapSize
+				|| position.Y > mapSize)
+			{
+				return;
+			}
+
 			Tile til;
             switch (type)
             {
@@ -99,21 +105,24 @@ namespace Costam.Map
 
 		private void GenerateArea(Vector2 centralPosition, TileType type)
 		{
-			if (centralPosition == Vector2.Zero)
+			if (centralPosition.X == 0 ||
+				centralPosition.Y == 0)
 			{
 				return;
 			}
-			int size = rand.Next(1, 2);
+			int size = rand.Next(2, 3);
 			/*1- very small (2 tiles wide)
 			 *2- small (3 tiles wide)
 			 *3- medium (4 tiles wide)
 			 *4- large (5 tiles wide
 			 */
 
+			double direction = rand.NextDouble();
+			Vector2 pos = centralPosition;
+
+			#region very small
 			if (size == 1)
 			{
-				double direction = rand.NextDouble();
-				Vector2 pos = centralPosition;
 				if (direction>=0.5)
 				{
 					pos.X += 1;
@@ -124,7 +133,94 @@ namespace Costam.Map
 				}
 				CreateTile(type, pos);
 
+				direction = rand.NextDouble();
+				if (direction >= 0.5)
+				{
+					pos.Y += 1;
+				}
+				else
+				{
+					pos.Y -= 1;
+				}
+				CreateTile(type, pos);
 			}
+			#endregion
+			//works
+
+			#region small
+			if (size == 2)
+			{
+				double dir2 = rand.NextDouble();
+
+				if (direction >= 0.5)
+				{
+					// add 2 tiles horizontaly
+					pos.X += 1;
+					CreateTile(type, pos);
+					pos.X -= 2;
+					CreateTile(type, pos);
+
+					if (dir2 < 0.5)
+					{
+						pos.Y += 1;
+					}
+					else
+					{
+						pos.Y -= 1;
+					}
+
+					dir2 = rand.NextDouble();
+					pos.X = centralPosition.X;
+
+					if (dir2 < 0.33)
+					{
+						pos.X -= 1;
+					}
+					else if (dir2 > 0.66)
+					{
+						pos.X += 1;
+					}
+					else
+					{
+
+					}
+
+					CreateTile(type, pos);
+
+				}
+				else
+				{
+					//or verticaly
+					pos.Y += 1;
+					CreateTile(type, pos);
+					pos.Y -= 2;
+					CreateTile(type, pos);
+
+					if (dir2 < 0.5)
+					{
+						pos.X += 1;
+					}
+					else
+					{
+						pos.X -= 1;
+					}
+
+					dir2 = rand.NextDouble();
+					pos.Y = centralPosition.Y;
+
+					if (dir2 < 0.33)
+					{
+						pos.Y -= 1;
+					}
+					else if (dir2 > 0.66)
+					{
+						pos.Y += 1;
+					}
+				}
+			}
+			#endregion
+			//works
+
 		}
 
 
@@ -141,8 +237,9 @@ namespace Costam.Map
 					//checks if this tile is grass, if it's so, lets start lottery
 
 
-                    //create ponds
-                    if (currentPondIndex < maxponds)
+					//create ponds
+					#region ponds
+					if (currentPondIndex < maxponds)
                     {
 						// if we already have less tan $maxponds ponds
                         int result = rand.Next(1, pondSICN);
@@ -158,11 +255,13 @@ namespace Costam.Map
 							CreateTile(TileType.Water, item.GetPositionInTab());
 							//make choosen tile water tile
 						}
-                    }
+					}
+					#endregion
 
 
 					//create rocks
-					else if (currentRockIndex < maxrocks)
+					#region rocks
+					if (currentRockIndex < maxrocks)
 					{
 						// if we already have less tan $maxrocks rocks
 						int result = rand.Next(1, rockSICN);
@@ -179,7 +278,8 @@ namespace Costam.Map
 							//make choosen tile rock tile
 						}
 					}
-                }
+					#endregion
+				}
 
                 else //if current tle type is NOT grass
                 {
@@ -205,10 +305,10 @@ namespace Costam.Map
         private void GenerateMap(int size)
         {
             //fills whole map with grass
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < size + 1; i++)
             {
                 //rows
-                for (int j = 0; j < size; j++)
+                for (int j = 0; j < size + 1; j++)
                 {
                     //cols
                     TilesArray[i, j] = new TileGrass(new Vector2(i, j));
@@ -223,7 +323,7 @@ namespace Costam.Map
         #region else, unimportant shit
         public Map()
         {
-            TilesArray = new Tile[mapSize, mapSize];
+            TilesArray = new Tile[mapSize + 1, mapSize + 1];
             ponds = new Vector2[maxponds + 1];
 			rocks = new Vector2[maxrocks + 1];
 

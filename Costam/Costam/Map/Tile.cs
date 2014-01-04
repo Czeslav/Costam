@@ -32,6 +32,8 @@ namespace Costam.Map
             positionPX.Y = position.Y * size;
 
             rectangle = new Rectangle((int)positionPX.X, (int)positionPX.Y, size, size);
+
+			texture = SpriteBank.tileGrass;
         }
         #endregion
 
