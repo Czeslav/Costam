@@ -17,7 +17,7 @@ namespace Costam
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-		Camera camera;
+		Camera2D camera;
 
         Map.Map map;
 
@@ -45,8 +45,7 @@ namespace Costam
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SpriteBank.LoadTextures(Content);
-			camera = new Camera();
-			camera.Pos = new Vector2(1000, 1000);
+			camera = new Camera2D(GraphicsDevice.Viewport);
 
             map = new Map.Map();
         }
@@ -71,13 +70,7 @@ namespace Costam
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			spriteBatch.Begin(SpriteSortMode.BackToFront,
-						BlendState.AlphaBlend,
-						null,
-						null,
-						null,
-						null,
-						camera.get_transformation(GraphicsDevice));
+			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
 			map.Draw(spriteBatch);
             spriteBatch.End();
 

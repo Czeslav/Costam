@@ -1,4 +1,8 @@
-﻿using System;
+﻿#region Version History (1.0)
+// 03.07.11 ~ Created
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,75 +12,158 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Costam
 {
-	public class Camera
+	public class Camera2D
 	{
-		protected float _zoom; // Camera Zoom
-		public Matrix _transform; // Matrix Transform
-		public Vector2 _pos; // Camera Position
-		protected float _rotation; // Camera Rotation
+		#region Fields
 
-		public Camera()
-		{
-			_zoom = 1.0f;
-			_rotation = 0.0f;
-			_pos = Vector2.Zero;
-		}
+		protected float _zoom;
+		protected Matrix _transform;
+		protected Matrix _inverseTransform;
+		protected Vector2 _pos;
+		protected float _rotation;
+		protected Viewport _viewport;
+		protected MouseState _mState;
+		protected KeyboardState _keyState;
+		protected Int32 _scroll;
 
-		// Sets and gets zoom
+		#endregion
+
+		#region Properties
+
 		public float Zoom
 		{
 			get { return _zoom; }
-			set { _zoom = value; if (_zoom < 0.1f) _zoom = 0.1f; } // Negative zoom will flip image
+			set { _zoom = value; }
 		}
-
+		/// <summary>
+		/// Camera View Matrix Property
+		/// </summary>
+		public Matrix Transform
+		{
+			get { return _transform; }
+			set { _transform = value; }
+		}
+		/// <summary>
+		/// Inverse of the view matrix, can be used to get objects screen coordinates
+		/// from its object coordinates
+		/// </summary>
+		public Matrix InverseTransform
+		{
+			get { return _inverseTransform; }
+		}
+		public Vector2 Pos
+		{
+			get { return _pos; }
+			set { _pos = value; }
+		}
 		public float Rotation
 		{
 			get { return _rotation; }
 			set { _rotation = value; }
 		}
 
-		KeyboardState keyboard;
+		#endregion
+
+		#region Constructor
+
+		public Camera2D(Viewport viewport)
+		{
+			_zoom = 1.0f;
+			_scroll = 1;
+			_rotation = 0.0f;
+			_pos = Vector2.Zero;
+			_viewport = viewport;
+		}
+
+		#endregion
+
+		#region Methods
+
+		/// <summary>
+		/// Update the camera view
+		/// </summary>
 		public void Update()
 		{
-			keyboard = Keyboard.GetState();
-
-			if (keyboard.IsKeyDown(Keys.Up))
-			{
-				_pos.Y -= 3;
-			}
-			else if (keyboard.IsKeyDown(Keys.Down))
-			{
-				_pos.Y += 3;
-			}
-
-			if (keyboard.IsKeyDown(Keys.Left))
-			{
-				_pos.X -= 3;
-			}
-			else if (keyboard.IsKeyDown(Keys.Right))
-			{
-				_pos.X += 3;
-			}
+			//Call Camera Input
+			Input();
+			//Clamp zoom value
+			_zoom = MathHelper.Clamp(_zoom, 0.0f, 10.0f);
+			//Clamp rotation value
+			_rotation = ClampAngle(_rotation);
+			//Create view matrix
+			_transform = Matrix.CreateRotationZ(_rotation) *
+							Matrix.CreateScale(new Vector3(_zoom, _zoom, 1)) *
+							Matrix.CreateTranslation(_pos.X, _pos.Y, 0);
+			//Update inverse matrix
+			_inverseTransform = Matrix.Invert(_transform);
 		}
 
-
-
-		// Get set position
-		public Vector2 Pos
+		/// <summary>
+		/// Example Input Method, rotates using cursor keys and zooms using mouse wheel
+		/// </summary>
+		protected virtual void Input()
 		{
-			get { return _pos; }
-			set { _pos = value; }
+			_mState = Mouse.GetState();
+			_keyState = Keyboard.GetState();
+			//Check zoom
+			if (_mState.ScrollWheelValue > _scroll)
+			{
+				_zoom += 0.1f;
+				_scroll = _mState.ScrollWheelValue;
+			}
+			else if (_mState.ScrollWheelValue < _scroll)
+			{
+				_zoom -= 0.1f;
+				_scroll = _mState.ScrollWheelValue;
+			}
+			/*Check rotation
+			if (_keyState.IsKeyDown(Keys.Left))
+			{
+				_rotation -= 0.1f;
+			}
+			if (_keyState.IsKeyDown(Keys.Right))
+			{
+				_rotation += 0.1f;
+			}
+			*/
+			//Check Move
+			if (_keyState.IsKeyDown(Keys.A))
+			{
+				_pos.X += 3f;
+			}
+			if (_keyState.IsKeyDown(Keys.D))
+			{
+				_pos.X -= 3f;
+			}
+			if (_keyState.IsKeyDown(Keys.W))
+			{
+				_pos.Y += 3f;
+			}
+			if (_keyState.IsKeyDown(Keys.S))
+			{
+				_pos.Y -= 3f;
+			}
 		}
 
-		public Matrix get_transformation(GraphicsDevice graphicsDevice)
+		/// <summary>
+		/// Clamps a radian value between -pi and pi
+		/// </summary>
+		/// <param name="radians">angle to be clamped</param>
+		/// <returns>clamped angle</returns>
+		protected float ClampAngle(float radians)
 		{
-			_transform =       // Thanks to o KB o for this solution
-			  Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y, 0)) *
-										 Matrix.CreateRotationZ(Rotation) *
-										 Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
-										 Matrix.CreateTranslation(new Vector3(graphicsDevice.Viewport.Width * 0.5f, graphicsDevice.Viewport.Height * 0.5f, 0));
-			return _transform;
+			while (radians < -MathHelper.Pi)
+			{
+				radians += MathHelper.TwoPi;
+			}
+			while (radians > MathHelper.Pi)
+			{
+				radians -= MathHelper.TwoPi;
+			}
+			return radians;
 		}
+
+		#endregion
 	}
 }
 
