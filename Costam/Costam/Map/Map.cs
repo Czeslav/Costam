@@ -15,18 +15,18 @@ namespace Costam.Map
     {
         private Random rand = new Random();
         private Tile[,] TilesArray; //array of tiles, whole map
-        private int mapSize = 126; //determines map size (width and height)
+        private int mapSize = 128; //determines map size (width and height)
 
         private Vector2[] ponds;
         private int currentPondIndex = 0;
-        private int maxponds = 32;
-        private int pondSICN = 100;
+        private int maxponds = 64;
+        private int pondSICN = 500;
         //SICN - Shit I Cant Name - sets probability of creating pond
 
 		private Vector2[] rocks;
 		private int currentRockIndex = 0;
-		private int maxrocks = 32;
-		private int rockSICN = 100;
+		private int maxrocks = 64;
+		private int rockSICN = 500;
 
 
 

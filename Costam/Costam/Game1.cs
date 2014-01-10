@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using Costam.Map;
+using Costam.GUI;
 
 namespace Costam
 {
@@ -20,6 +21,7 @@ namespace Costam
 		Camera2D camera;
 
         Map.Map map;
+		Gui GUI;
 
 
 
@@ -48,6 +50,7 @@ namespace Costam
 			camera = new Camera2D(GraphicsDevice.Viewport);
 
             map = new Map.Map();
+			GUI = new Gui(GraphicsDevice.Viewport);
         }
 
         protected override void UnloadContent()
@@ -60,8 +63,12 @@ namespace Costam
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+			Globals.Update();
+
 
 			camera.Update();
+			GUI.Update();
+			
 
             base.Update(gameTime);
         }
@@ -70,9 +77,15 @@ namespace Costam
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+			//draw everything affected with camera
 			spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
 			map.Draw(spriteBatch);
             spriteBatch.End();
+
+			//draw other shit
+			spriteBatch.Begin();
+			GUI.Draw(spriteBatch);
+			spriteBatch.End();
 
 
             base.Draw(gameTime);
