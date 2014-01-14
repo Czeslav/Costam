@@ -8,12 +8,13 @@ using Microsoft.Xna.Framework;
 
 namespace Costam.GUI
 {
-	public enum GuiState { None, MainMenu, Context }
+	public enum GuiState { None, MainMenu, MessageBox }
 
 	class Gui
 	{
 		private GuiState currentGuiState = GuiState.None;
 		private MainMenu mainMenu;
+		private MessageBox messageBox;
 		private Viewport viewport;
 
 
@@ -22,6 +23,7 @@ namespace Costam.GUI
 			this.viewport = viewport;
 
 			mainMenu = new MainMenu(viewport);
+			messageBox = new MessageBox(viewport, "Trolololo ja sobie derpie tu ze strinami i dzielenie mstringow, a wy sie nudzicie a ja mam co robic, w sumie nie mam co robic, skoro takie cos robie, ale jest dobrze");
 		}
 
 		public void Update()
@@ -45,13 +47,35 @@ namespace Costam.GUI
 				}
 			}
 			#endregion
+
+			if (currentGuiState == GuiState.None)
+			{
+				//pass
+			}
+			else if (currentGuiState == GuiState.MainMenu)
+			{
+				mainMenu.Update(ref currentGuiState);				
+			}
+			else if (currentGuiState == GuiState.MessageBox)
+			{
+				messageBox.Update(ref currentGuiState);
+			}
+
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			if (currentGuiState == GuiState.MainMenu)
+			if (currentGuiState == GuiState.None)
+			{
+				//pass
+			}
+			else if (currentGuiState == GuiState.MainMenu)
 			{
 				mainMenu.Draw(spriteBatch);
+			}
+			else if (currentGuiState == GuiState.MessageBox)
+			{
+				messageBox.Draw(spriteBatch);
 			}
 		}
 	}

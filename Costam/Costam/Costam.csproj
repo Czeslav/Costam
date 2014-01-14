@@ -112,6 +112,7 @@
     <Compile Include="GUI\Button.cs" />
     <Compile Include="GUI\Gui.cs" />
     <Compile Include="GUI\MainMenu.cs" />
+    <Compile Include="GUI\MessageBox.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Tile.cs" />
     <Compile Include="Map\TileGrass.cs" />

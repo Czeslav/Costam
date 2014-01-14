@@ -9,6 +9,8 @@ namespace Costam
 {
     static class SpriteBank
     {
+		public static SpriteFont font;
+
         public static Texture2D tileGrass;
         public static Texture2D tileWater;
         public static Texture2D tileGravel;
@@ -18,6 +20,8 @@ namespace Costam
 
         public static void LoadTextures(ContentManager Content)
         {
+			font = Content.Load<SpriteFont>("font");
+
             tileGrass = Content.Load<Texture2D>("Tiles/GrassTile");
             tileGravel = Content.Load<Texture2D>("Tiles/GrassTile");
             tileRock = Content.Load<Texture2D>("Tiles/RockTile");

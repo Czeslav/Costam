@@ -11,12 +11,14 @@ namespace Costam
 	{
 		public static Rectangle mouseRectangle;
 		public static MouseState mouse;
+		public static MouseState prevMouse;
 
 		public static KeyboardState oldKeyboard;
 		public static KeyboardState currentKeyboard;
 
 		public static void Update()
 		{
+			prevMouse = mouse;
 			mouse = Mouse.GetState();
 			mouseRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 

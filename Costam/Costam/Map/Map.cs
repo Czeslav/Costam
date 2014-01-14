@@ -110,7 +110,7 @@ namespace Costam.Map
 			{
 				return;
 			}
-			int size = rand.Next(2, 3);
+			int size = rand.Next(1, 3);
 			/*1- very small (2 tiles wide)
 			 *2- small (3 tiles wide)
 			 *3- medium (4 tiles wide)
