@@ -18,15 +18,16 @@ namespace Costam.GUI
 
 		private void AddButton(int ID, string text)
 		{
+			//calculate position for new button
 			int height = 50;
 			int width = (int)(rectangle.Width * 0.8f);
 			int topSpacing = 20;
 			int sideSpacing = (int)(0.1f * rectangle.Width);
 			int y = ID * height + ID * topSpacing + rectangle.Y + 30;
 			int x = rectangle.X + sideSpacing;
-
+			//create new rectangle with freschly calculated parameters
 			Rectangle rec = new Rectangle(x,y,width,height);
-
+			//create button and add it to array of buttons
 			buttons[ID] = new Button(ID, rec, text);
 		}
 
@@ -36,12 +37,14 @@ namespace Costam.GUI
 		{
 			this.viewport = viewport;
 			buttons = new Button[5];
-		
+			
+			//calculate menu rectangle and position
 			int width = 400;
 			int height = 500;
 			int x = viewport.Width / 2 - width / 2;
 			int y = viewport.Height / 2 - height / 2;
 			rectangle = new Rectangle(x, y, width, height);
+			//rectangle which hovers whole screen
 			screen = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
 			AddButton(0, "asda");
@@ -49,10 +52,11 @@ namespace Costam.GUI
 			AddButton(2, "c");
 		}
 
-		public void Update(ref GuiState gowno)
+		public void Update(ref GuiState gowno, Gui siki)
 		{
 			foreach (var item in buttons)
 			{
+				//update buttons
 				if (item == null)
 				{
 					break;
@@ -62,8 +66,8 @@ namespace Costam.GUI
 
 			if (buttons[0].isClicked)
 			{
-				gowno = GuiState.MessageBox;
-				// emmmmmm
+				//if button first form top is clicked, swich to message box
+				siki.CreateMessageBox("adsadgk jf dhgfj hgfhg  dgd hgfd hfls syoiu lhao 7ohjhnch cgvi6q", true);
 			}
 
 		}

@@ -19,7 +19,6 @@ namespace Costam.Map
         protected Vector2 position; //position means X and Y position on two dimentions array of tiles
         protected Vector2 positionPX; //position in pixels (position(2,2) means x=2*size y=2*size)
         protected Rectangle rectangle;
-        protected Texture2D texture;
         protected TileType type;
 
         #endregion
@@ -32,8 +31,6 @@ namespace Costam.Map
             positionPX.Y = position.Y * size;
 
             rectangle = new Rectangle((int)positionPX.X, (int)positionPX.Y, size, size);
-
-			texture = SpriteBank.tileGrass;
         }
         #endregion
 
@@ -66,9 +63,9 @@ namespace Costam.Map
         }
 
 
-        public void Draw(SpriteBatch spriteBatch)
+        virtual public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, rectangle, Color.White);
+            spriteBatch.Draw(SpriteBank.blankPixel, rectangle, Color.White);
         }
     }
 }

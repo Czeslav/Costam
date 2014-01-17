@@ -22,14 +22,21 @@ namespace Costam.GUI
 		{
 			this.viewport = viewport;
 
-			mainMenu = new MainMenu(viewport);
-			messageBox = new MessageBox(viewport, "Trolololo ja sobie derpie tu ze strinami i dzielenie mstringow, a wy sie nudzicie a ja mam co robic, w sumie nie mam co robic, skoro takie cos robie, ale jest dobrze");
+			mainMenu = new MainMenu(viewport); //for developing only, later it will be moved somewhere and rewritten
+			messageBox = new MessageBox(viewport);
+		}
+
+		public void CreateMessageBox(string text, bool fromMenu)
+		{
+			messageBox.SetText(text);
+			messageBox.fromMenu = fromMenu;
+			currentGuiState = GuiState.MessageBox;
 		}
 
 		public void Update()
 		{
 			#region input
-
+			//check is esc is pressed, if so, toogle main menu
 			if (Globals.currentKeyboard.IsKeyDown(Keys.Escape)
 				&& Globals.oldKeyboard.IsKeyUp(Keys.Escape))
 			{
@@ -54,7 +61,7 @@ namespace Costam.GUI
 			}
 			else if (currentGuiState == GuiState.MainMenu)
 			{
-				mainMenu.Update(ref currentGuiState);				
+				mainMenu.Update(ref currentGuiState, this);				
 			}
 			else if (currentGuiState == GuiState.MessageBox)
 			{

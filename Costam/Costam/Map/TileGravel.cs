@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Costam.Map
 {
@@ -11,8 +12,12 @@ namespace Costam.Map
         public TileGravel(Vector2 Position)
             : base(Position)
         {
-            texture = SpriteBank.tileGravel;
             type = TileType.Gravel;
         }
+
+		public override void Draw(SpriteBatch spriteBatch)
+		{
+			spriteBatch.Draw(SpriteBank.tileGravel, rectangle, Color.White);
+		}
     }
 }

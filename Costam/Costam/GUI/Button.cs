@@ -33,6 +33,7 @@ namespace Costam.GUI
 		{
 			if (rectangle.Intersects(Globals.mouseRectangle))
 			{
+				//if button is hovered by cursor
 				hovered = true;
 				if (Globals.mouse.LeftButton == ButtonState.Pressed
 					&& Globals.prevMouse.LeftButton == ButtonState.Released)
@@ -52,6 +53,7 @@ namespace Costam.GUI
 		
 		}
 
+
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			if (isClicked)
@@ -67,6 +69,7 @@ namespace Costam.GUI
 				spriteBatch.Draw(SpriteBank.blankPixel, rectangle, Color.FromNonPremultiplied(200, 200, 200, 200));
 			}
 
+			//calculate string position and draw it
 			Vector2 stringSize= SpriteBank.font.MeasureString(text);
 			spriteBatch.DrawString(SpriteBank.font, text, new Vector2(rectangle.X + (rectangle.Width - stringSize.X)/2, rectangle.Y + (rectangle.Height - stringSize.Y)/2 ),Color.Red);
 		}
