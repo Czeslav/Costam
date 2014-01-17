@@ -16,6 +16,7 @@ namespace Costam.GUI
 		private string rawText;
 		private string[] lines;
 		private Button exitButton;
+		private Viewport viewport;
 		public bool fromMenu;
 
 
@@ -34,7 +35,7 @@ namespace Costam.GUI
 				string lineTest;
 				//just for testing if created line is not too width
 				int currentline = 0;
-				
+
 
 				for (int i = 0; i < words.Length; i++)
 				{
@@ -44,7 +45,7 @@ namespace Costam.GUI
 					lineTest = string.Join(" ", line);
 					//join all words from list into one string
 
-					if (SpriteBank.font.MeasureString(lineTest).X > rectangle.Width - 75)
+					if (SpriteBank.font.MeasureString(lineTest).X > 300)
 					{
 						//if $lineTest is not too wide, then:
 						lines[currentline] = lineTest;
@@ -57,7 +58,7 @@ namespace Costam.GUI
 						//and increment official lines index
 					}
 
-					if (i==words.Length -1)
+					if (i == words.Length - 1)
 					{
 						lines[currentline] = lineTest;
 					}
@@ -70,15 +71,52 @@ namespace Costam.GUI
 				lines = new string[1];
 				lines[0] = rawText;
 			}
+
+			/*
+			int textHeight=0;
+			int textWidth=0;
+			foreach (var item in lines)
+			{
+				if (item==null)
+				{
+					break;
+				}
+
+				textHeight += (int)SpriteBank.font.MeasureString(item).Y;
+				textHeight += 10;
+				textWidth = (int)SpriteBank.font.MeasureString(item).X;
+
+				if (textWidth > rectangle.Width)
+				{
+					rectangle.Width = textWidth + 20;
+				}
+			}
+			textHeight += 50;
+			rectangle.Height = textHeight;*/
 		}
 
-		private void Construct(Viewport viewport)
+		private void Construct()
 		{
 			screen = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
 			//calculate message box position and size
-			int width = 300;
-			int height = 250;
+			int height = 0;
+			int width = 400;
+			foreach (var item in lines)
+			{
+				if (item == null)
+				{
+					break;
+				}
+
+				height += (int)SpriteBank.font.MeasureString(item).Y;
+				height += 10;
+
+			}
+			height += 100;
+			rectangle.Height = height;
+
+
 			int x = screen.Center.X - width / 2;
 			int y = screen.Center.Y - height / 2;
 
@@ -96,13 +134,13 @@ namespace Costam.GUI
 
 		public MessageBox(Viewport viewport, string text)
 		{
+			this.viewport = viewport;
 			rawText = text;
-			Construct(viewport);
 			CutString();
 		}
 		public MessageBox(Viewport viewport)
 		{
-			Construct(viewport);
+			this.viewport = viewport;
 		}
 		#endregion
 
@@ -110,6 +148,7 @@ namespace Costam.GUI
 		{
 			rawText = text;
 			CutString();
+			Construct();
 		}
 
 

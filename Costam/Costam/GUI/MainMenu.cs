@@ -67,7 +67,7 @@ namespace Costam.GUI
 			if (buttons[0].isClicked)
 			{
 				//if button first form top is clicked, swich to message box
-				siki.CreateMessageBox("adsadgk jf dhgfj hgfhg  dgd hgfd hfls syoiu lhao 7ohjhnch cgvi6q", true);
+				siki.CreateMessageBox("Map Saved", true);
 			}
 
 		}

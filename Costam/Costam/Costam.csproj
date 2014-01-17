@@ -123,6 +123,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="SpriteBank.cs" />
+    <Compile Include="TODO.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
