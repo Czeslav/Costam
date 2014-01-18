@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework;
 
 namespace Costam.GUI
 {
-	public enum GuiState { None, MainMenu, MessageBox }
+	public enum GuiState { None, MainMenu, MessageBox, Context }
 
 	class Gui
 	{
 		private GuiState currentGuiState = GuiState.None;
 		private MainMenu mainMenu;
 		private MessageBox messageBox;
+		private ContextMenu contextMenu;
 		private Viewport viewport;
 
 
@@ -53,11 +54,26 @@ namespace Costam.GUI
 					currentGuiState = GuiState.None;
 				}
 			}
+
+			if (Globals.mouse.RightButton == ButtonState.Pressed
+				&& Globals.prevMouse.RightButton == ButtonState.Released)
+			{
+				currentGuiState = GuiState.Context;
+
+				string[] abcd = new string[2];
+				abcd[0] = "dupa";
+				abcd[1] = "nic";
+				contextMenu = new ContextMenu(new Vector2(Globals.mouse.X, Globals.mouse.Y), abcd);
+			}
 			#endregion
 
 			if (currentGuiState == GuiState.None)
 			{
 				//pass
+			}
+			else if (currentGuiState == GuiState.Context)
+			{
+				contextMenu.Update();
 			}
 			else if (currentGuiState == GuiState.MainMenu)
 			{
@@ -75,6 +91,10 @@ namespace Costam.GUI
 			if (currentGuiState == GuiState.None)
 			{
 				//pass
+			}
+			else if (currentGuiState == GuiState.Context)
+			{
+				contextMenu.Draw(spriteBatch);
 			}
 			else if (currentGuiState == GuiState.MainMenu)
 			{
